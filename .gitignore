@@ -106,4 +106,6 @@ ImportedBundles/
 
 # Cache
 /meatkit.json
+/Assets/Testing
+/Assets/Testing.meta
 MeatKitUpdate.unitypackage
