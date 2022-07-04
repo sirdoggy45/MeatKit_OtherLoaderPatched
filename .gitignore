@@ -100,9 +100,6 @@ ImportedBundles/
 /[Aa]ssets/Settings.meta
 /bakery_times.log
 
-# Ignore packages
-/[Aa]ssets/Packages/
-/[Aa]ssets/Packages.meta
 
 # Cache
 /meatkit.json
