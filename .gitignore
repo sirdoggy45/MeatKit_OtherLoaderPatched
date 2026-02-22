@@ -101,8 +101,9 @@ ImportedBundles/
 /bakery_times.log
 
 # Ignore packages
-/[Aa]ssets/Packages/
-/[Aa]ssets/Packages.meta
+# EDIT: Disabled on OLPatched branch
+# /[Aa]ssets/Packages/
+# /[Aa]ssets/Packages.meta
 
 # Cache
 /meatkit.json
