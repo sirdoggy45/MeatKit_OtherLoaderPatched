@@ -104,6 +104,8 @@ ImportedBundles/
 # EDIT: Disabled on OLPatched branch
 # /[Aa]ssets/Packages/
 # /[Aa]ssets/Packages.meta
+/[Aa]ssets/Packages/Testing/
+/[Aa]ssets/Packages/Testing.meta
 
 # Cache
 /meatkit.json
