@@ -101,12 +101,17 @@ ImportedBundles/
 /bakery_times.log
 
 # Ignore packages
-# EDIT: Disabled on OLPatched branch
-# /[Aa]ssets/Packages/
-# /[Aa]ssets/Packages.meta
-/[Aa]ssets/Packages/Testing/
-/[Aa]ssets/Packages/Testing.meta
+/[Aa]ssets/Packages/
+/[Aa]ssets/Packages.meta
 
 # Cache
 /meatkit.json
 MeatKitUpdate.unitypackage
+
+
+# NEW: OtherLoaderPatched
+!/[Aa]ssets/Packages/Testing/
+!/[Aa]ssets/Packages/Testing.meta
+
+!/[Aa]ssets/Managed/OtherLoader.*
+!/[Aa]ssets/Managed/Stratum.*
