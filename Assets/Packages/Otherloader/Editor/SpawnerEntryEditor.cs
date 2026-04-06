@@ -5,7 +5,6 @@ using OtherLoader;
 
 using System;
 using System.Linq;
-using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 
@@ -59,106 +58,105 @@ public class SpawnerEntryEditor : Editor
 
         do
         {
-            if (property.name == "MainObjectID")
+            switch (property.name)
             {
-                if (entry.MainObjectObj != null)
+                case "MainObjectID":
                 {
-                    property.stringValue = entry.MainObjectObj.ItemID;
+                    if (entry.MainObjectObj != null)
+                        property.stringValue = entry.MainObjectObj.ItemID;
+
+                    break;
                 }
-            }
+                case "MainObjectObj":
+                case "EntryIcon":
+                case "UsesLargeSpawnPad":
+                    DrawHorizontalLine();
+                    break;
+                case "SubCategory":
+                    if (isAmmoPage)
+                    {
+                        _ammoCategory = (AmmoCategoryType)EditorGUILayout.EnumPopup(
+                            "Ammo Category",
+                            _ammoCategory
+                        );
+                        continue;
+                    }
 
-            if (property.name == "MainObjectObj" || property.name == "EntryIcon" || property.name == "UsesLargeSpawnPad")
-            {
-                DrawHorizontalLine();
-            }
-
-            if (property.name == "SubCategory")
-            {
-                if (isAmmoPage)
+                    break;
+                case "EntryPath":
                 {
-                    _ammoCategory = (AmmoCategoryType)EditorGUILayout.EnumPopup(
-                        "Ammo Category",
-                        _ammoCategory
-                    );
-                }
-                else
-                    DrawProperty(property);
+                    DrawHorizontalLine();
 
-                continue;
-            }
+                    var values = property.stringValue.Split('/').ToList();
+                    property.stringValue = page.ToString();
+                    property.stringValue += "/";
 
-            if (property.name == "EntryPath")
-            {
-                DrawHorizontalLine();
-                
-                var values = property.stringValue.Split('/').ToList();
-                property.stringValue = page.ToString();
-                property.stringValue += "/";
+                    // Ammo page doesn't use subcategories
+                    if (isAmmoPage)
+                    {
+                        if (hasPageChanged)
+                            _ammoCategory = AmmoCategoryType.None;
+                    
+                        subCatProperty.enumValueIndex = (int)ItemSpawnerID.ESubCategory.None;
 
-                // Ammo page doesn't use subcategories
-                if (isAmmoPage)
-                {
-                    if (hasPageChanged)
+                        if (_ammoCategory != AmmoCategoryType.None)
+                            property.stringValue += _ammoCategory.ToString();
+                        else if (!hasPageChanged)
+                            property.stringValue += values[1];
+                    }
+                    else
+                    {
+                        if (hasPageChanged)
+                            subCatProperty.enumValueIndex = (int)ItemSpawnerID.ESubCategory.None;
+                    
                         _ammoCategory = AmmoCategoryType.None;
                     
-                    subCatProperty.enumValueIndex = (int)ItemSpawnerID.ESubCategory.None;
+                        if (subCat != ItemSpawnerID.ESubCategory.None)
+                            property.stringValue += subCat.ToString();
+                        else if (!hasPageChanged)
+                            property.stringValue += values[1];
+                    }
 
-                    if (_ammoCategory != AmmoCategoryType.None)
-                        property.stringValue += _ammoCategory.ToString();
-                    else if (!hasPageChanged)
-                        property.stringValue += values[1];
-                }
-                else
-                {
-                    if (hasPageChanged)
-                        subCatProperty.enumValueIndex = (int)ItemSpawnerID.ESubCategory.None;
-                    
-                    _ammoCategory = AmmoCategoryType.None;
-                    
-                    if (subCat != ItemSpawnerID.ESubCategory.None)
-                        property.stringValue += subCat.ToString();
-                    else if (!hasPageChanged)
-                        property.stringValue += values[1];
-                }
-
-                // Add ObjectID at the end of the path
-                var itemID = serializedObject.FindProperty("MainObjectID").stringValue;
-                if (!string.IsNullOrEmpty(itemID))
-                {
-                    //If the itemID field is currently filled, but previously wasn't, we fill maintain all of the path and then add the itemID
-                    if (_isItemIDEmpty)
+                    // Add ObjectID at the end of the path
+                    var itemID = serializedObject.FindProperty("MainObjectID").stringValue;
+                    if (!string.IsNullOrEmpty(itemID))
                     {
+                        //If the itemID field is currently filled, but previously wasn't, we fill maintain all of the path and then add the itemID
+                        if (_isItemIDEmpty)
+                        {
+                            for (int i = 2; i < values.Count; i++)
+                            {
+                                property.stringValue += "/" + values[i];
+                            }
+
+                            _isItemIDEmpty = false;
+                        }
+
+
+                        //If the itemID field was already filled previously, we can just draw everything until the itemID, and then add the itemID
+                        else
+                        {
+                            for (int i = 2; i < values.Count - 1; i++)
+                            {
+                                property.stringValue += "/" + values[i];
+                            }
+                        }
+
+                        property.stringValue += "/" + serializedObject.FindProperty("MainObjectID").stringValue;
+                    }
+
+                    else
+                    {
+                        _isItemIDEmpty = true;
+
                         for (int i = 2; i < values.Count; i++)
                         {
                             property.stringValue += "/" + values[i];
                         }
-
-                        _isItemIDEmpty = false;
                     }
 
-
-                    //If the itemID field was already filled previously, we can just draw everything until the itemID, and then add the itemID
-                    else
-                    {
-                        for (int i = 2; i < values.Count - 1; i++)
-                        {
-                            property.stringValue += "/" + values[i];
-                        }
-                    }
-
-                    property.stringValue += "/" + serializedObject.FindProperty("MainObjectID").stringValue;
+                    break;
                 }
-
-                else
-                {
-                    _isItemIDEmpty = true;
-
-                    for (int i = 2; i < values.Count; i++)
-                    {
-                        property.stringValue += "/" + values[i];
-                    }
-                }
-                
             }
 
             DrawProperty(property);
