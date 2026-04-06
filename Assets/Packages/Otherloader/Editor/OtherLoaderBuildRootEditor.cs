@@ -38,6 +38,23 @@ public class OtherLoaderBuildRootEditor : BuildItemEditor
 
         DrawHorizontalLine();
         EditorGUILayout.HelpBox("Warning Overview", MessageType.Info);
+        
+        try
+        {
+            var versionRecommended = SimpleVersion.Parse("3.0.7");
+            var versionCurrent = Updater.CurrentVersion;
+
+            // Show warning if current version is lower than recommended
+            if (versionCurrent.CompareByPrecedence(versionRecommended) < 0)
+                EditorGUILayout.HelpBox("You are using an old MeatKit version that doesn't " +
+                                        "have a fix for preventing asset bundle conflicts!\nPlease update " +
+                                        "by going to 'MeatKit > Check for updates'.", MessageType.Warning);
+        }
+        catch (Exception)
+        {
+            // ignored
+        }
+        
         DrawItemWarnings();
 
         DrawHorizontalLine();
