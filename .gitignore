@@ -111,3 +111,4 @@ MeatKitUpdate.unitypackage
 # NEW: OtherLoaderPatched
 !/[Aa]ssets/Managed/OtherLoader.*
 !/[Aa]ssets/Managed/Stratum.*
+/[Aa]ssets/_Projects*
