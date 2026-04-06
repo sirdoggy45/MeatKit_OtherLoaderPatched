@@ -225,6 +225,11 @@ public class OtherLoaderBuildRootEditor : BuildItemEditor
                         {
                             nextNode.declared = true;
                         }
+                        
+                        if (Enum.IsDefined(typeof(SpawnerEntryEditor.AmmoCategoryType), pathParts[k]))
+                        {
+                            nextNode.declared = true;
+                        }
                     }
 
                     currNode = nextNode;

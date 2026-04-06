@@ -13,7 +13,7 @@ public class SpawnerEntryEditor : Editor
 {
 #if H3VR_IMPORTED
     
-    private enum AmmoCategoryType
+    internal enum AmmoCategoryType
     {
         None, Magazine, Clip, Speedloader, Cartridge
     }
