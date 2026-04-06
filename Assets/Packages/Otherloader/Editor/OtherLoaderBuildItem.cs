@@ -58,7 +58,7 @@ namespace MeatKit
 
         public override IEnumerable<string> RequiredDependencies
         {
-            get { return new[] { "devyndamonster-OtherLoader-1.3.0" }; }
+            get { return new[] { "Sirdoggy-OtherLoaderPatched-2.0.0" }; }
         }
 
         public override Dictionary<string, BuildMessage> Validate()
@@ -133,7 +133,7 @@ namespace MeatKit
 
         public override void GenerateLoadAssets(TypeDefinition plugin, ILProcessor il)
         {
-            EnsurePluginDependsOn(plugin, "h3vr.otherloader", "1.3.0");
+            EnsurePluginDependsOn(plugin, "h3vr.otherloader", "2.0.0");
         }
 
 #endif

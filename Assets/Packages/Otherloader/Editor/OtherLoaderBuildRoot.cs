@@ -109,7 +109,7 @@ namespace MeatKit
 
         public override void GenerateLoadAssets(TypeDefinition plugin, ILProcessor il)
         {
-            EnsurePluginDependsOn(plugin, "h3vr.otherloader", "1.3.0");
+            EnsurePluginDependsOn(plugin, "h3vr.otherloader", "2.0.0");
 
             foreach (BepinexDepPair dependancy in BepinexDependancies)
             {
