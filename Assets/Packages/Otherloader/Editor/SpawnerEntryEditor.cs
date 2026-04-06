@@ -1,16 +1,13 @@
 ﻿
-
 #if H3VR_IMPORTED
 using FistVR;
 using OtherLoader;
 #endif
 
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-
 
 [CustomEditor(typeof(OtherLoader.ItemSpawnerEntry), true)]
 public class SpawnerEntryEditor : Editor

@@ -1,23 +1,19 @@
 ﻿
-
 #if H3VR_IMPORTED
 
 using MeatKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using UnityEditor;
 using UnityEngine;
-
 using FistVR;
 using OtherLoader;
 
-[CustomEditor(typeof(OtherLoaderBuildRoot), true)]
+[CustomEditor(typeof(OtherLoaderBuildRoot))]
 public class OtherLoaderBuildRootEditor : BuildItemEditor
 {
-
-    private PathNode pathRoot;
+    private PathNode _pathRoot;
 
     public override void OnInspectorGUI()
     {
@@ -25,7 +21,7 @@ public class OtherLoaderBuildRootEditor : BuildItemEditor
 
         if (ValidationMessages.Count > 0) return;
 
-        pathRoot = new PathNode("");
+        _pathRoot = new PathNode("");
 
         SerializedProperty firstList = serializedObject.FindProperty("BuildItemsFirst").Copy();
         PopulatePathTree(firstList);
@@ -36,7 +32,7 @@ public class OtherLoaderBuildRootEditor : BuildItemEditor
         SerializedProperty lastList = serializedObject.FindProperty("BuildItemsLast").Copy();
         PopulatePathTree(lastList);
 
-        string pathString = GetPathString(pathRoot);
+        string pathString = GetPathString(_pathRoot);
 
         EditorStyles.helpBox.richText = true;
 
@@ -202,7 +198,7 @@ public class OtherLoaderBuildRootEditor : BuildItemEditor
                 string[] pathParts = path.Split('/');
                 string currPath = "";
 
-                PathNode currNode = pathRoot;
+                PathNode currNode = _pathRoot;
                 for(int k = 0; k < pathParts.Length; k++)
                 {
                     currPath += (k == 0?"":"/") + pathParts[k];

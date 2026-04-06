@@ -1,22 +1,10 @@
-﻿
-
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using BepInEx;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
-
 using UnityEditor;
 using UnityEngine;
-
-#if H3VR_IMPORTED
-using OtherLoader;
-using FistVR;
-using Valve.Newtonsoft.Json;
-using Valve.Newtonsoft.Json.Linq;
-#endif
 
 namespace MeatKit
 {
@@ -27,7 +15,6 @@ namespace MeatKit
         public string guid;
         public string version;
     }
-
 
     [CreateAssetMenu(menuName = "MeatKit/Build Items/OtherLoader Root", fileName = "BuildRootNew")]
     public class OtherLoaderBuildRoot : BuildItem
@@ -61,7 +48,7 @@ namespace MeatKit
         {
             var messages = base.Validate();
 
-            List<OtherLoaderBuildItem> allBuildItems = BuildItemsFirst.Concat(BuildItemsAny).Concat(BuildItemsLast).ToList();
+            var allBuildItems = BuildItemsFirst.Concat(BuildItemsAny).Concat(BuildItemsLast).ToList();
 
             ValidateBuildItems(messages, BuildItemsFirst, allBuildItems, "BuildItemsFirst");
             ValidateBuildItems(messages, BuildItemsAny, allBuildItems, "BuildItemsAny");
@@ -76,7 +63,7 @@ namespace MeatKit
             List<OtherLoaderBuildItem> allBuildItems,
             string messageField)
         {
-            foreach (OtherLoaderBuildItem buildItem in targetBuildItems)
+            foreach (var buildItem in targetBuildItems)
             {
                 if (buildItem == null)
                 {
@@ -96,7 +83,7 @@ namespace MeatKit
 
         public override List<AssetBundleBuild> ConfigureBuild()
         {
-            List<AssetBundleBuild> bundles = new List<AssetBundleBuild>();
+            var bundles = new List<AssetBundleBuild>();
 
             BuildItemsFirst.ForEach(o => { bundles.AddRange(o.ConfigureBuild()); });
 
@@ -111,34 +98,31 @@ namespace MeatKit
         {
             EnsurePluginDependsOn(plugin, "h3vr.otherloader", "2.0.0");
 
-            foreach (BepinexDepPair dependancy in BepinexDependancies)
+            foreach (var dependancy in BepinexDependancies)
             {
                 EnsurePluginDependsOn(plugin, dependancy.guid, dependancy.version);
             }
 
-            //If set to self load, we add a bunch of code to load the items
             if (SelfLoading)
             {
-                //Create lists of the bundles
-                string[] loadFirst = BuildItemsFirst.Select(o => o.BundleName.ToLower()).ToArray();
-                string[] loadAny = BuildItemsAny.Select(o => o.BundleName.ToLower()).ToArray();
-                string[] loadLast = BuildItemsLast.Select(o => o.BundleName.ToLower()).ToArray();
+                var loadFirst = BuildItemsFirst.Select(o => o.BundleName.ToLower()).ToArray();
+                var loadAny = BuildItemsAny.Select(o => o.BundleName.ToLower()).ToArray();
+                var loadLast = BuildItemsLast.Select(o => o.BundleName.ToLower()).ToArray();
+                
+                // Get reference to the RegisterDirectLoad method and path to it
+                var basePath = plugin.Fields.First(f => f.Name == "BasePath");
+                const BindingFlags publicStatic = BindingFlags.Public | BindingFlags.Static;
+                var registerLoadMethod = typeof(OtherLoader.OtherLoader).GetMethod("RegisterDirectLoad", publicStatic);
 
-
-                // Get references to the path and the method we're calling
-                var publicStatic = BindingFlags.Public | BindingFlags.Static;
-                FieldReference basePath = plugin.Fields.First(f => f.Name == "BasePath");
-                var otherloaderRegisterLoad = typeof(OtherLoader.OtherLoader).GetMethod("RegisterDirectLoad", publicStatic);
-
-
-                // Now load the path, guid, dependancies, and pass the 3 arrays of bundle names
+                // Pass the path, guid, dependancies, and 3 arrays of bundle names as params
                 il.Emit(OpCodes.Ldsfld, basePath);
-                il.Emit(OpCodes.Ldstr, BuildWindow.SelectedProfile.Author + "." + BuildWindow.SelectedProfile.PackageName);
+                il.Emit(OpCodes.Ldstr, BuildWindow.SelectedProfile.Author + "." + 
+                                       BuildWindow.SelectedProfile.PackageName);
                 il.Emit(OpCodes.Ldstr, string.Join(",", LoadDependancies.ToArray()));
                 il.Emit(OpCodes.Ldstr, string.Join(",", loadFirst));
                 il.Emit(OpCodes.Ldstr, string.Join(",", loadAny));
                 il.Emit(OpCodes.Ldstr, string.Join(",", loadLast));
-                il.Emit(OpCodes.Call, plugin.Module.ImportReference(otherloaderRegisterLoad));
+                il.Emit(OpCodes.Call, plugin.Module.ImportReference(registerLoadMethod));
             }
         }
 #endif

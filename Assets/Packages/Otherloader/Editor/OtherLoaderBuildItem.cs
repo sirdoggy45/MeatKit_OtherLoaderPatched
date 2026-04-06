@@ -1,17 +1,12 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using BepInEx;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using UnityEditor;
 using UnityEngine;
 
 #if H3VR_IMPORTED
-using Valve.Newtonsoft.Json;
-using Valve.Newtonsoft.Json.Linq;
 using FistVR;
 #endif
 
@@ -61,18 +56,11 @@ namespace MeatKit
             get { return new[] { "Sirdoggy-OtherLoaderPatched-2.0.0" }; }
         }
 
-        public override Dictionary<string, BuildMessage> Validate()
-        {
-            var messages = base.Validate();
-
-            return messages;
-        }
-
         public override List<AssetBundleBuild> ConfigureBuild()
         {
-            List<AssetBundleBuild> bundles = new List<AssetBundleBuild>();
+            var bundles = new List<AssetBundleBuild>();
 
-            List<string> dataNames = new List<string>();
+            var dataNames = new List<string>();
             dataNames.AddRange(SpawnerEntries.Select(o => AssetDatabase.GetAssetPath(o)));
             dataNames.AddRange(FVRObjects.Select(o => AssetDatabase.GetAssetPath(o)));
             dataNames.AddRange(AccuracyCharts.Select(o => AssetDatabase.GetAssetPath(o)));
@@ -84,11 +72,9 @@ namespace MeatKit
             dataNames.AddRange(AudioImpactSets.Select(o => AssetDatabase.GetAssetPath(o)));
             dataNames.AddRange(TutorialBlocks.Select(o => AssetDatabase.GetAssetPath(o)));
 
-            List<string> prefabNames = new List<string>();
+            var prefabNames = new List<string>();
             prefabNames.AddRange(Prefabs.Select(o => AssetDatabase.GetAssetPath(o)));
 
-
-            //If the build item is on demand, we split it into two bundles
             if (OnDemand)
             {
                 bundles.Add(new AssetBundleBuild
@@ -104,8 +90,6 @@ namespace MeatKit
                     assetNames = prefabNames.ToArray()
                 });
             }
-
-            //If the build item is not on demand, it is all in once bundle
             else
             {
                 bundles.Add(new AssetBundleBuild
@@ -120,16 +104,14 @@ namespace MeatKit
             return bundles;
         }
 
-
         private void ExportVideos()
         {
-            foreach (Object videoFile in TutorialVideos)
+            foreach (var videoFile in TutorialVideos)
             {
-                string assetPath = AssetDatabase.GetAssetPath(videoFile);
+                var assetPath = AssetDatabase.GetAssetPath(videoFile);
                 File.Copy(assetPath, BuildWindow.SelectedProfile.ExportPath + Path.GetFileName(assetPath));
             }
         }
-
 
         public override void GenerateLoadAssets(TypeDefinition plugin, ILProcessor il)
         {
