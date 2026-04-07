@@ -96,7 +96,8 @@ namespace MeatKit
 
         public override void GenerateLoadAssets(TypeDefinition plugin, ILProcessor il)
         {
-            EnsurePluginDependsOn(plugin, "h3vr.otherloader", "2.0.0");
+            // Keep version at 1.3.0 as long as there are no breaking changes
+            EnsurePluginDependsOn(plugin, "h3vr.otherloader", "1.3.0");
 
             foreach (var dependancy in BepinexDependancies)
             {
