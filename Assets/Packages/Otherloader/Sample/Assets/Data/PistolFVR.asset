@@ -16,10 +16,12 @@ MonoBehaviour:
     Bundle: 
     AssetName: Assets/Packages/Otherloader/Sample/Assets/HomemadePistol.prefab
   m_export: 1
-  ItemID: HomemadePistol
+  ItemID: Devyndamonster.HomemadePistol
   DisplayName: Homemade Pistol
+  Family: 
   Category: 1
-  SpawnedFromId: HomemadePistol
+  ItemBoxOverride: 0
+  SpawnedFromId: Devyndamonster.HomemadePistol
   Mass: 0
   MagazineCapacity: 0
   RequiresPicatinnySight: 0
@@ -41,6 +43,9 @@ MonoBehaviour:
   TagPowerupType: 0
   TagThrownType: 0
   TagThrownDamageType: 0
+  TagSosigClothingLinkUsage: 0
+  TagSosigClothingType: 0
+  PathClothing: 
   MagazineType: 0
   ClipType: 0
   UsesRoundTypeFlag: 0
