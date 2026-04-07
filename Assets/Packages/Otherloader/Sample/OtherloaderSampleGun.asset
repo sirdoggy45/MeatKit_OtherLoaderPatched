@@ -25,5 +25,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1b7b2f131cab47944a94d9c7c1f67c27, type: 2}
   BundleCompressionType: 2
   BuildAction: 1
-  OutputProfile: C:/Users/Owner/AppData/Roaming/r2modmanPlus-local/H3VR/profiles/Otherloader
-    Test
+  OutputProfile:
